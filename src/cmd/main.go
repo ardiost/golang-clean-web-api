@@ -1,7 +1,28 @@
 package main
 
-import "github.com/ardiost/golang-clean-web-api/api"
+import (
+	"log"
+
+	"github.com/ardiost/golang-clean-web-api/api"
+	"github.com/ardiost/golang-clean-web-api/config"
+	"github.com/ardiost/golang-clean-web-api/data/cache"
+	"github.com/ardiost/golang-clean-web-api/data/db"
+)
 
 func main() {
-	api.InitServer()
+	cfg := config.GetConfig()
+	err := cache.InitRedis(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer cache.CloseRedis()
+
+	err = db.InitDb(cfg)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.CloseDb()
+
+	api.InitServer(cfg)
 }

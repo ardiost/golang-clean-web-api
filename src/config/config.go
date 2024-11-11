@@ -2,8 +2,10 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/spf13/viper"
 )
@@ -16,16 +18,19 @@ type Config struct {
 
 type ServerConfig struct {
 	Port    string
-	runMode string
+	RunMode string
 }
 
 type PostgresConfig struct {
-	Host     string
-	Port     string
-	User     string
-	Password string
-	DbName   string
-	SSLMode  bool
+	Host            string
+	Port            string
+	User            string
+	Password        string
+	DbName          string
+	SSLMode         string
+	MaxIdleConns    int
+	MaxOpenConns    int
+	ConnMaxLifetime time.Duration
 }
 
 type RedisConfig struct {
@@ -34,21 +39,25 @@ type RedisConfig struct {
 	User               string
 	Password           string
 	Db                 string
-	MinIdleConnections int
+	DialTimeout        time.Duration
+	ReadTimeout        time.Duration
+	WriteTimeout       time.Duration
 	PoolSize           int
-	PoolTimeout        int
+	PoolTimeout        time.Duration
+	IdleCheckFrequency time.Duration
 }
 
 func GetConfig() *Config {
 	cfgPath := getConfigPath((os.Getenv("APP_ENV")))
+	fmt.Printf("%v", cfgPath)
 	v, err := LoadConfig(cfgPath, "yml")
 	if err != nil {
-		log.Fatal("error in Load config : %v", err)
+		log.Fatalf("Error in load config %v", err)
 	}
 	cfg, err := ParseConfig(v)
 
 	if err != nil {
-		log.Fatal("error in parse config : %v", err)
+		log.Fatalf("Error in load config %v", err)
 	}
 	return cfg
 }
