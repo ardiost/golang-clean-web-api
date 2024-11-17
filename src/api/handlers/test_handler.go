@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/ardiost/golang-clean-web-api/api/helper"
 	"github.com/gin-gonic/gin"
 )
 
@@ -22,10 +23,20 @@ func NewTestHandler() *TestHandler {
 	return &TestHandler{}
 }
 
+// Test godoc
+// @Summary UserById
+// @Description UserById
+// @Tags Test
+// @Accept json
+// @Produce json
+// @Success 200 {object} helper.BaseHttpResponse "Success"
+// @Failure 400 {object} helper.BaseHttpResponse "Failed"
+// @Router /v1/tester/test1/ [get]
+
 func (h *TestHandler) TestHa(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"result": "ُhandler for /",
-	})
+	c.JSON(http.StatusOK, helper.GenerateBaseResponse(gin.H{
+		"result": "this is for this",
+	}, true, 0))
 }
 
 func (h *TestHandler) GetUsers(c *gin.Context) {
@@ -36,10 +47,10 @@ func (h *TestHandler) GetUsers(c *gin.Context) {
 
 func (h *TestHandler) GetUserById(c *gin.Context) {
 	id := c.Param("id")
-	c.JSON(http.StatusOK, gin.H{
-		"result":  "ok",
-		"user-id": id,
-	})
+	c.JSON(http.StatusOK, helper.GenerateBaseResponse(gin.H{
+		"result": "UserById",
+		"id":     id,
+	}, true, 0))
 }
 
 func (h *TestHandler) GetUserByUserName(c *gin.Context) {
