@@ -32,7 +32,6 @@ func NewTestHandler() *TestHandler {
 // @Success 200 {object} helper.BaseHttpResponse "Success"
 // @Failure 400 {object} helper.BaseHttpResponse "Failed"
 // @Router /v1/tester/test1/ [get]
-
 func (h *TestHandler) TestHa(c *gin.Context) {
 	c.JSON(http.StatusOK, helper.GenerateBaseResponse(gin.H{
 		"result": "this is for this",
@@ -45,6 +44,16 @@ func (h *TestHandler) GetUsers(c *gin.Context) {
 	})
 }
 
+// UserbyId godoc
+// @Summary UserById
+// @Description UserById
+// @Tags Test2
+// @Accept json
+// @Produce json
+// @param id path int true "user id"
+// @Success 200 {object} helper.BaseHttpResponse "Success"
+// @Failure 400 {object} helper.BaseHttpResponse "Failed"
+// @Router /v1/tester/test1/user/{id} [get]
 func (h *TestHandler) GetUserById(c *gin.Context) {
 	id := c.Param("id")
 	c.JSON(http.StatusOK, helper.GenerateBaseResponse(gin.H{
@@ -109,6 +118,18 @@ func (h *TestHandler) Query2(c *gin.Context) {
 		"name":   name,
 	})
 }
+
+// BodyBind godoc
+// @Summary BodyBind
+// @Description BodyBind
+// @Tags Test3
+// @Accept json
+// @Produce json
+// @param person body personInformation true "person data"
+// @Success 200 {object} helper.BaseHttpResponse "Success"
+// @Failure 400 {object} helper.BaseHttpResponse "Failed"
+// @Router /v1/tester/test1/body [post]
+// @Security AuthBearer
 func (h *TestHandler) BodyBind(c *gin.Context) {
 	p := personInformation{}
 	err := c.ShouldBindJSON(&p)

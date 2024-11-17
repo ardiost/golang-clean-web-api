@@ -10,6 +10,9 @@ import (
 )
 
 func main() {
+	// @securityDefinitions.apikey AuthBearer
+	// @in header
+	// @name Authorization
 	cfg := config.GetConfig()
 	err := cache.InitRedis(cfg)
 	if err != nil {
