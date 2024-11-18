@@ -21,7 +21,7 @@ type ServerConfig struct {
 	RunMode string
 }
 
-type ServerConfig struct {
+type LoggerConfig struct {
 	FilePath string
 	Encoding string
 	Level    string
