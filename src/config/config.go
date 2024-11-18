@@ -21,6 +21,11 @@ type ServerConfig struct {
 	RunMode string
 }
 
+type ServerConfig struct {
+	FilePath string
+	Encoding string
+	Level    string
+}
 type PostgresConfig struct {
 	Host            string
 	Port            string
