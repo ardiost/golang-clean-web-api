@@ -1,5 +1,9 @@
 package logging
 
+import (
+	"github.com/ardiost/golang-clean-web-api/config"
+)
+
 type Logger interface {
 	Init()
 
@@ -16,4 +20,6 @@ type Logger interface {
 	Fatalf(err error, template string, args ...interface{})
 }
 
-func NewLogger
+func NewLogger(cfg *config.Config) Logger {
+	return NewZapLogger(cfg)
+}
