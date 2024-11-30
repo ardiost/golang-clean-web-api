@@ -14,6 +14,7 @@ type Config struct {
 	Server   ServerConfig
 	Postgres PostgresConfig
 	Redis    RedisConfig
+	Logger   LoggerConfig
 }
 
 type ServerConfig struct {
