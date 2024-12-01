@@ -9,13 +9,13 @@ type Logger interface {
 	Info(cat Category, sub SubCategory, msg string, extra map[ExtraKey]interface{})
 	Infoof(template string, args ...interface{})
 
-	Warn(err error, cat Category, sub SubCategory, msg string, extra map[ExtraKey]interface{})
-	Warnf(err error, template string, args ...interface{})
+	Warn( cat Category, sub SubCategory, msg string, extra map[ExtraKey]interface{})
+	Warnf( template string, args ...interface{})
 
-	Fatal(err error, cat Category, sub SubCategory, msg string, extra map[ExtraKey]interface{})
-	Fatalf(err error, template string, args ...interface{})
+	Fatal( cat Category, sub SubCategory, msg string, extra map[ExtraKey]interface{})
+	Fatalf( template string, args ...interface{})
 }
 
-// func NewLogger(cfg *config.Config) Logger {
-// 	return NewZapLogger(cfg)
-// }
+func NewLogger(cfg *config.Config) Logger {
+	return NewZapLogger(cfg)
+}

@@ -14,16 +14,17 @@ func main() {
 	// @in header
 	// @name Authorization
 	cfg := config.GetConfig()
+	logger := logging.NewLogger(cfg)
 	err := cache.InitRedis(cfg)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(logging.Redis,logging.StartUp,err.Error(),nil)
 	}
 	defer cache.CloseRedis()
 
 	err = db.InitDb(cfg)
 
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(logging.Postgres,logging.StartUp,err.Error(),nil)
 	}
 	defer db.CloseDb()
 

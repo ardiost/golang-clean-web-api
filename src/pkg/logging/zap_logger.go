@@ -20,7 +20,7 @@ type zapLogger struct {
 	logger *zap.SugaredLogger
 }
 
-func NewZapLogger(cfg *config.Config) *zapLogger {
+func newZapLogger(cfg *config.Config) *zapLogger {
 	logger := &zapLogger{cfg: cfg}
 	logger.Init()
 	return logger
@@ -55,6 +55,50 @@ func (l *zapLogger) Init() {
 }
 
 func (l *zapLogger) Debug(cat, Category, sub SubCategory, msg string, extra map[ExtraKey]interface{}) {
-	l.logger.Debugw(msg, "name", "ali")
+
+	l.logger.Debugw(msg.params...)
 }
-func (l *zapLogger) Debugf(template string, args ...interface{})
+func (l *zapLogger) Debugf(template string, args ...interface{}){
+	l.Logger.Debugf(template,args)
+}
+
+func (l *zapLogger) Info(cat, Category, sub SubCategory, msg string, extra map[ExtraKey]interface{}) {
+
+	l.logger.Infofw(msg.params...)
+}
+func (l *zapLogger) Infof(template string, args ...interface{}){
+	l.Logger.Infof(template,args)
+}
+
+func (l *zapLogger) Warn(cat, Category, sub SubCategory, msg string, extra map[ExtraKey]interface{}) {
+
+	l.logger.Warnw(msg.params...)
+}
+func (l *zapLogger) Warnf(template string, args ...interface{}){
+	l.Logger.Warnf(template,args)
+}
+
+func (l *zapLogger) Error(cat, Category, sub SubCategory, msg string, extra map[ExtraKey]interface{}) {
+
+	l.logger.Errorw(msg.params...)
+}
+func (l *zapLogger) Errorf(template string, args ...interface{}){
+	l.Logger.Errorf(template,args)
+}
+
+func (l *zapLogger) Fatal(cat, Category, sub SubCategory, msg string, extra map[ExtraKey]interface{}) {
+
+	l.logger.Fatalw(msg.params...)
+}
+func (l *zapLogger) Fatalf(template string, args ...interface{}){
+	l.Logger.Fatalf(template,args)
+}
+
+func prepareLogKeys (extra map[ExtraKey]interface{},cat Category ,sub SubCategory)[]interface{}{
+	if extra == nil {
+		extra= make(map[ExtraKey]interface{}, 0)
+	}
+	extra["Category"]=cat
+	extra["SubCategory"]=sub
+	params:= mapToZapParams(extra)
+}
