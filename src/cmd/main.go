@@ -7,6 +7,7 @@ import (
 	"github.com/ardiost/golang-clean-web-api/config"
 	"github.com/ardiost/golang-clean-web-api/data/cache"
 	"github.com/ardiost/golang-clean-web-api/data/db"
+	"github.com/ardiost/golang-clean-web-api/data/db/migrations"
 )
 
 func main() {
@@ -25,6 +26,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	migrations.Up_1()
+
 	defer db.CloseDb()
 
 	api.InitServer(cfg)
