@@ -12,6 +12,7 @@ func Up_1() {
 	database := db.GetDb()
 
 	createTables(database)
+	createDefaultInformation(database)
 
 }
 
@@ -29,6 +30,9 @@ func createTables(database *gorm.DB) {
 	tables = addNewTable(database, user, tables)
 	tables = addNewTable(database, role, tables)
 	tables = addNewTable(database, userRole, tables)
+
+	database.Migrator().CreateTable(tables...)
+
 }
 
 func addNewTable(database *gorm.DB, models interface{}, tables []interface{}) []interface{} {
@@ -36,7 +40,6 @@ func addNewTable(database *gorm.DB, models interface{}, tables []interface{}) []
 		tables = append(tables, models)
 	}
 
-	database.Migrator().CreateTable(tables...)
 	return tables
 }
 func createDefaultInformation(database *gorm.DB) {
@@ -66,7 +69,7 @@ func createAdminUserIfNotExist(database *gorm.DB, u *models.User, roleId int) {
 	exist := 0
 	database.Model(&models.User{}).
 		Select("1").
-		Where("name = ?", u.UserName).
+		Where("user_name = ?", u.UserName).
 		First(&exist)
 	if exist == 0 {
 		database.Create(u)
