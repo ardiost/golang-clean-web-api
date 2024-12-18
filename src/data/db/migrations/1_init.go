@@ -1,6 +1,8 @@
 package migrations
 
 import (
+	"log"
+
 	"github.com/ardiost/golang-clean-web-api/constants"
 	"github.com/ardiost/golang-clean-web-api/data/db"
 	"github.com/ardiost/golang-clean-web-api/data/models"
@@ -47,7 +49,7 @@ func createDefaultInformation(database *gorm.DB) {
 	createRoleIfNotExist(database, &adminRole)
 	defaultRole := models.Role{Name: constants.AdminRoleName}
 	createRoleIfNotExist(database, &defaultRole)
-	u := models.User{UserName: constants.DefaultUserName, FirstName: "Test", LastName: "Test", MobileNumber: "09130954259", Email: "test@gmail.com"}
+	u := models.User{UserName: constants.DefaultUserName, FirstName: "مصطفی", LastName: "Test", MobileNumber: "09130954259", Email: "test@gmail.com"}
 	pass := "123456"
 	hashPassword, _ := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
 	u.Password = string(hashPassword)
@@ -55,28 +57,42 @@ func createDefaultInformation(database *gorm.DB) {
 }
 
 func createRoleIfNotExist(database *gorm.DB, r *models.Role) {
-	exist := 0
+	var count int64
+	// بررسی وجود رکورد در جدول roles
 	database.Model(&models.Role{}).
-		Select("1").
 		Where("name = ?", r.Name).
-		First(&exist)
-	if exist == 0 {
-		database.Create(r)
+		Count(&count)
+
+	if count == 0 {
+		// ایجاد رکورد اگر وجود ندارد
+		if err := database.Create(r).Error; err != nil {
+			log.Println("Error creating role:", err)
+		}
 	}
 }
 
 func createAdminUserIfNotExist(database *gorm.DB, u *models.User, roleId int) {
-	exist := 0
+	var count int64
+	// بررسی وجود کاربر در جدول users
 	database.Model(&models.User{}).
-		Select("1").
 		Where("user_name = ?", u.UserName).
-		First(&exist)
-	if exist == 0 {
-		database.Create(u)
-		ur := models.UserRole{UserId: u.Id, RoleId: roleId}
-		database.Create(&ur)
+		Count(&count)
+
+	if count == 0 {
+		// ایجاد کاربر
+		if err := database.Create(u).Error; err != nil {
+			log.Println("Error creating user:", err)
+			return
+		}
+
+		// ایجاد ارتباط UserRole با استفاده از u.Id به‌روز شده
+		ur := &models.UserRole{UserId: u.Id, RoleId: roleId}
+		if err := database.Create(ur).Error; err != nil {
+			log.Println("Error creating user role:", err)
+		}
 	}
 }
+
 func Down_1() {
 
 }
