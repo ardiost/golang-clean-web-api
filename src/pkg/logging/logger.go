@@ -15,5 +15,3 @@ type Logger interface {
 	Fatal(err error, cat Category, sub SubCategory, msg string, extra map[ExtraKey]interface{})
 	Fatalf(err error, template string, args ...interface{})
 }
-
-func NewLogger
