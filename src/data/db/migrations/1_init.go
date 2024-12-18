@@ -4,6 +4,7 @@ import (
 	"github.com/ardiost/golang-clean-web-api/constants"
 	"github.com/ardiost/golang-clean-web-api/data/db"
 	"github.com/ardiost/golang-clean-web-api/data/models"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -43,14 +44,34 @@ func createDefaultInformation(database *gorm.DB) {
 	createRoleIfNotExist(database, &adminRole)
 	defaultRole := models.Role{Name: constants.AdminRoleName}
 	createRoleIfNotExist(database, &defaultRole)
+	u := models.User{UserName: constants.DefaultUserName, FirstName: "Test", LastName: "Test", MobileNumber: "09130954259", Email: "test@gmail.com"}
+	pass := "123456"
+	hashPassword, _ := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
+	u.Password = string(hashPassword)
+	createAdminUserIfNotExist(database, &u, adminRole.Id)
 }
 
 func createRoleIfNotExist(database *gorm.DB, r *models.Role) {
 	exist := 0
-	database.Model(&models.Role{}).Select("1").Where("name = ?", r.Name).First(&exist)
+	database.Model(&models.Role{}).
+		Select("1").
+		Where("name = ?", r.Name).
+		First(&exist)
 	if exist == 0 {
-		r := &models.Role{Name: constants.DefaultRoleName}
 		database.Create(r)
+	}
+}
+
+func createAdminUserIfNotExist(database *gorm.DB, u *models.User, roleId int) {
+	exist := 0
+	database.Model(&models.User{}).
+		Select("1").
+		Where("name = ?", u.UserName).
+		First(&exist)
+	if exist == 0 {
+		database.Create(u)
+		ur := models.UserRole{UserId: u.Id, RoleId: roleId}
+		database.Create(&ur)
 	}
 }
 func Down_1() {
