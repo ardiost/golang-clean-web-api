@@ -14,6 +14,7 @@ type Config struct {
 	Server   ServerConfig
 	Postgres PostgresConfig
 	Redis    RedisConfig
+	Otp      OtpConfig
 }
 
 type ServerConfig struct {
@@ -50,6 +51,12 @@ type RedisConfig struct {
 	PoolSize           int
 	PoolTimeout        time.Duration
 	IdleCheckFrequency time.Duration
+}
+
+type OtpConfig struct {
+	ExpireTime time.Duration
+	Digits     int
+	Limiter    time.Duration
 }
 
 func GetConfig() *Config {
